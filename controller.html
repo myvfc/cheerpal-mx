@@ -185,6 +185,12 @@
   #fire-btn:active { transform: translateY(1px); }
   #fire-btn:disabled { background: var(--panel2); box-shadow: none; transform: none; }
   #fire-btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, #ffffff22 0%, transparent 60%); }
+  #end-session-btn {
+    background: transparent; border: 1.5px solid #ff444466; border-radius: 8px;
+    color: #ff6666; font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem;
+    letter-spacing: 1px; padding: 6px 14px; cursor: pointer; transition: all .2s;
+  }
+  #end-session-btn:hover { background: #ff444422; border-color: #ff4444; color: #ff4444; }
   #fire-status { text-align: center; font-size: 0.82rem; min-height: 20px; color: var(--green); }
 
   #fire-log { display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; }
@@ -303,6 +309,7 @@
 
   <div class="bottom-bar">
     <div id="session-time">Sesión: 00:00</div>
+    <button id="end-session-btn" onclick="endSession()">⏹ FIN DE SESIÓN</button>
     <div>Gimnasio: <strong id="footer-gym-name" style="color:var(--text);">—</strong></div>
   </div>
 </div>
@@ -528,7 +535,38 @@
     selectedType = 'Reconocimiento';
   }
 
-  async function dismissMsg(id, btn) {
+  async function endSession() {
+    if (!gymData) return;
+    if (!confirm('¿Finalizar sesión? Esto limpiará todas las alertas activas en las pantallas de las familias.')) return;
+    const btn = document.getElementById('end-session-btn');
+    btn.disabled = true;
+    btn.textContent = 'Finalizando…';
+    try {
+      await supaFetch('PATCH',
+        `/rest/v1/broadcast_queue?gym_id=eq.${gymData.gym_id}&status=eq.active`,
+        { status: 'expired' }
+      );
+      btn.textContent = '✓ Sesión Finalizada';
+      btn.style.color = 'var(--green)';
+      btn.style.borderColor = 'var(--green)';
+      document.getElementById('fire-status').style.color = 'var(--green)';
+      document.getElementById('fire-status').textContent = 'Sesión finalizada — todas las alertas eliminadas de las pantallas.';
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = '⏹ FIN DE SESIÓN';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+        document.getElementById('fire-status').textContent = '';
+      }, 5000);
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = '⏹ FIN DE SESIÓN';
+      document.getElementById('fire-status').style.color = '#ff4444';
+      document.getElementById('fire-status').textContent = '❌ No se pudo finalizar la sesión. Inténtalo de nuevo.';
+    }
+  }
+
+    async function dismissMsg(id, btn) {
     try {
       await supaFetch('PATCH', `/rest/v1/fan_messages?id=eq.${id}`, { status: 'dismissed' });
       btn.closest('.fan-msg-card').remove();
