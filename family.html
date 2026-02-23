@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>CheerPal — Family App</title>
+<title>CheerPal — App para Familias</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
   :root {
@@ -248,14 +248,14 @@
 <!-- Loading -->
 <div class="loading-screen" id="loading-screen">
   <div class="loading-logo">Cheer<span>Pal</span></div>
-  <div class="loading-sub">Loading your gym…</div>
+  <div class="loading-sub">Cargando tu gimnasio…</div>
 </div>
 
 <!-- Invalid gym -->
 <div id="invalid-gym">
   <div class="icon">😕</div>
-  <h2>Gym Not Found</h2>
-  <p>This link doesn't match an active CheerPal gym.<br/>Check with your gym director for the correct link.</p>
+  <h2>Gimnasio No Encontrado</h2>
+  <p>Este enlace no corresponde a un gimnasio CheerPal activo.<br/>Consulta con el director de tu gimnasio para obtener el enlace correcto.</p>
 </div>
 
 <!-- Auth gate -->
@@ -263,10 +263,10 @@
   <div class="auth-box">
     <div class="auth-logo">Cheer<span>Pal</span></div>
     <div class="auth-gym-name" id="auth-gym-name"></div>
-    <div class="auth-title">Sign in to your gym</div>
-    <div class="auth-sub">Enter the email your director used to invite you. We'll send a magic link — no password needed.</div>
-    <input class="auth-input" type="email" id="auth-email" placeholder="your@email.com" inputmode="email"/>
-    <button class="auth-btn" id="auth-btn" onclick="requestAccess()">GET ACCESS LINK</button>
+    <div class="auth-title">Inicia sesión en tu gimnasio</div>
+    <div class="auth-sub">Ingresa el correo que tu director usó para invitarte. Te enviaremos un enlace mágico — sin contraseña.</div>
+    <input class="auth-input" type="email" id="auth-email" placeholder="tu@correo.com" inputmode="email"/>
+    <button class="auth-btn" id="auth-btn" onclick="requestAccess()">OBTENER ENLACE DE ACCESO</button>
     <div id="auth-status"></div>
   </div>
 </div>
@@ -274,8 +274,8 @@
 <!-- Ticker -->
 <div id="ticker-bar">
   <div class="ticker-track">
-    <span class="ticker-text" id="ticker-text">CheerPal Live</span>
-    <span class="ticker-text" id="ticker-text-2">CheerPal Live</span>
+    <span class="ticker-text" id="ticker-text">CheerPal en Vivo</span>
+    <span class="ticker-text" id="ticker-text-2">CheerPal en Vivo</span>
   </div>
 </div>
 
@@ -289,18 +289,18 @@
       <div class="logo">Cheer<span>Pal</span></div>
       <div class="gym-name-display" id="gym-name-display"></div>
     </div>
-    <div class="live-pill"><div class="live-dot"></div>LIVE</div>
+    <div class="live-pill"><div class="live-dot"></div>EN VIVO</div>
   </div>
   <div class="team-selector" id="team-selector"></div>
 </header>
 
-<!-- Alerts -->
+<!-- Alertas -->
 <div class="section" id="alerts-section" style="display:none;">
-  <div class="section-title">📡 Director Alerts</div>
+  <div class="section-title">📡 Alertaas del Director</div>
   <div id="alerts-feed">
     <div class="empty-alerts">
       <div class="empty-icon">📣</div>
-      Waiting for alerts from your director.<br/>They'll appear here instantly.
+      Esperando alertas de tu director.<br/>Aparecerán aquí al instante.
     </div>
   </div>
 </div>
@@ -309,11 +309,11 @@
 
 <!-- Message panel -->
 <div class="msg-panel" id="msg-panel" style="display:none;">
-  <div class="msg-panel-header">💬 Message the Director</div>
+  <div class="msg-panel-header">💬 Escribirle al Director</div>
   <div class="msg-panel-body">
-    <input type="text" id="fan-name" placeholder="Your name (optional)" autocomplete="off"/>
-    <textarea id="fan-msg" placeholder="Send a message to the director — rotation question, shoutout request, anything…" rows="3"></textarea>
-    <button id="send-btn">SEND MESSAGE</button>
+    <input type="text" id="fan-name" placeholder="Tu nombre (opcional)" autocomplete="off"/>
+    <textarea id="fan-msg" placeholder="Envía un mensaje al director — pregunta de rotación, solicitud de reconocimiento, lo que sea…" rows="3"></textarea>
+    <button id="send-btn">ENVIAR MENSAJE</button>
     <div id="msg-status"></div>
   </div>
 </div>
@@ -323,12 +323,12 @@
 <script>
   const SUPABASE_URL  = 'https://pexmoqldjbtpjxjtfsxs.supabase.co';
   const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBleG1vcWxkamJ0cGp4anRmc3hzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTg3MDksImV4cCI6MjA4NzM3NDcwOX0.wZNaFCVuApL2ftozAxI52UBmmH6heeVV7co-0OptonA';
-  const BASE_URL      = 'https://cheerpal.fun';
+  const BASE_URL      = 'https://mx.cheerpal.fun';
   const POLL_INTERVAL = 8000;
 
   let gymData      = null;
   let gymSlug      = null;
-  let selectedTeam = null;
+  let selectedEquipo = null;
   let seenIds      = new Set();
   let activeTicker = null;
   let userEmail    = null;
@@ -404,11 +404,11 @@
       }
 
       // Set default team from membership
-      selectedTeam = members[0].team || null;
+      selectedEquipo = members[0].team || null;
     }
 
     // Load teams
-    await loadTeams();
+    await loadEquipos();
 
     // Show app
     document.getElementById('loading-screen').style.display = 'none';
@@ -423,14 +423,14 @@
     document.title = `${gymData.name} — CheerPal`;
 
     // Start polling
-    pollAlerts();
-    setInterval(pollAlerts, POLL_INTERVAL);
+    pollAlertas();
+    setInterval(pollAlertas, POLL_INTERVAL);
   }
 
   // ════════════════════════════════════════
   // TEAMS
   // ════════════════════════════════════════
-  async function loadTeams() {
+  async function loadEquipos() {
     const res = await supaFetch('GET',
       `/rest/v1/gym_teams?gym_id=eq.${gymData.gym_id}&order=order_num.asc`
     );
@@ -443,21 +443,21 @@
     }
 
     // Default to first team or member's team
-    if (!selectedTeam) selectedTeam = teams[0].name;
+    if (!selectedEquipo) selectedEquipo = teams[0].name;
 
     selector.innerHTML = teams.map((t, i) =>
-      `<button class="team-chip ${t.name === selectedTeam ? 'active' : ''}"
+      `<button class="team-chip ${t.name === selectedEquipo ? 'active' : ''}"
         data-team="${escHtml(t.name)}"
-        onclick="selectTeam(this, '${escHtml(t.name)}')">
+        onclick="selectEquipo(this, '${escHtml(t.name)}')">
         ${t.emoji || '⭐'} ${escHtml(t.name)}
       </button>`
     ).join('');
   }
 
-  function selectTeam(el, team) {
+  function selectEquipo(el, team) {
     document.querySelectorAll('.team-chip').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
-    selectedTeam = team;
+    selectedEquipo = team;
   }
 
   // ════════════════════════════════════════
@@ -483,12 +483,12 @@
     const status = document.getElementById('auth-status');
     if (!email || !email.includes('@')) {
       status.style.color = 'var(--amber)';
-      status.textContent = '⚠️ Please enter a valid email.';
+      status.textContent = '⚠️ Por favor ingresa un correo válido.';
       return;
     }
 
     btn.disabled = true;
-    btn.textContent = 'SENDING…';
+    btn.textContent = 'ENVIANDO…';
     status.textContent = '';
 
     try {
@@ -505,17 +505,17 @@
       userEmail = email;
 
       status.style.color = 'var(--green)';
-      status.textContent = '✅ Check your email for the access link!';
-      btn.textContent = 'LINK SENT';
+      status.textContent = '✅ ¡Revisa tu correo para el enlace de acceso!';
+      btn.textContent = 'ENLACE ENVIADO';
 
       // Try to launch anyway (if already invited)
       setTimeout(() => launchApp(), 1500);
 
     } catch(e) {
       status.style.color = 'var(--pink)';
-      status.textContent = '❌ Could not send link. Try again.';
+      status.textContent = '❌ No se pudo enviar el enlace. Intenta de nuevo.';
       btn.disabled = false;
-      btn.textContent = 'GET ACCESS LINK';
+      btn.textContent = 'OBTENER ENLACE DE ACCESO';
     }
   }
 
@@ -529,7 +529,7 @@
   }
 
   // ════════════════════════════════════════
-  // SEND MESSAGE
+  // ENVIAR MENSAJE
   // ════════════════════════════════════════
   document.getElementById('send-btn').addEventListener('click', async () => {
     const name    = document.getElementById('fan-name').value.trim() || userEmail?.split('@')[0] || 'Family';
@@ -539,41 +539,41 @@
 
     if (!message) {
       status.style.color = 'var(--amber)';
-      status.textContent = '⚠️ Please enter a message.';
+      status.textContent = '⚠️ Por favor ingresa un mensaje.';
       return;
     }
 
     btn.disabled = true;
-    btn.textContent = 'SENDING…';
+    btn.textContent = 'ENVIANDO…';
     status.textContent = '';
 
     try {
       const res = await supaFetch('POST', '/rest/v1/fan_messages', {
         gym_id: gymData.gym_id,
         name, message,
-        team: selectedTeam,
+        team: selectedEquipo,
         source: 'CheerPal Family App',
         status: 'pending',
         created_at: new Date().toISOString()
       });
       if (!res.ok) throw new Error();
       status.style.color = 'var(--green)';
-      status.textContent = '✅ Message sent to your director!';
+      status.textContent = '✅ ¡Mensaje enviado a tu director!';
       document.getElementById('fan-msg').value = '';
       setTimeout(() => { status.textContent = ''; }, 4000);
     } catch(e) {
       status.style.color = 'var(--pink)';
-      status.textContent = '❌ Could not send. Check your connection.';
+      status.textContent = '❌ No se pudo enviar. Verifica tu conexión.';
     }
 
     btn.disabled = false;
-    btn.textContent = 'SEND MESSAGE';
+    btn.textContent = 'ENVIAR MENSAJE';
   });
 
   // ════════════════════════════════════════
   // POLL ALERTS
   // ════════════════════════════════════════
-  async function pollAlerts() {
+  async function pollAlertas() {
     if (!gymData) return;
     try {
       const res = await supaFetch('GET',
@@ -581,7 +581,7 @@
       );
       if (!res.ok) return;
       const alerts = await res.json();
-      const relevant = alerts.filter(a => a.team === 'ALL' || a.team === selectedTeam);
+      const relevant = alerts.filter(a => a.team === 'ALL' || a.team === selectedEquipo);
       const newest = relevant[0];
       if (newest && !seenIds.has(newest.id)) {
         seenIds.add(newest.id);
@@ -589,29 +589,29 @@
         else showBanner(newest);
         if (newest.sound) playCrowdCheer();
       }
-      renderAlerts(relevant);
+      renderAlertas(relevant);
     } catch(e) {}
   }
 
-  function renderAlerts(alerts) {
+  function renderAlertas(alerts) {
     const feed = document.getElementById('alerts-feed');
     if (!alerts.length) {
-      feed.innerHTML = `<div class="empty-alerts"><div class="empty-icon">📣</div>Waiting for alerts from your director.<br/>They'll appear here instantly.</div>`;
+      feed.innerHTML = `<div class="empty-alerts"><div class="empty-icon">📣</div>Esperando alertas de tu director.<br/>Aparecerán aquí al instante.</div>`;
       return;
     }
     feed.innerHTML = alerts.map(a => {
       const typeClass = a.type ? a.type.toLowerCase() : 'shoutout';
       const time = new Date(a.fired_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
       return `<div class="alert-card ${typeClass}">
-        <div class="alert-type">${typeIcon(a.type)} ${a.type || 'Alert'}</div>
+        <div class="alert-type">${typeIcon(a.type)} ${a.type || 'Alerta'}</div>
         <div class="alert-msg">${escHtml(a.message)}</div>
-        <div class="alert-time">${time} · ${a.team === 'ALL' ? 'All Teams' : escHtml(a.team) + ' Team'}</div>
+        <div class="alert-time">${time} · ${a.team === 'ALL' ? 'Todos los Equipos' : escHtml(a.team) + ' Equipo'}</div>
       </div>`;
     }).join('');
   }
 
   function typeIcon(type) {
-    const icons = { Shoutout:'📣', Hype:'🔥', Rotation:'📋', Poll:'🗳️' };
+    const icons = { Reconocimiento:'📣', Hype:'🔥', Rotación:'📋', Encuesta:'🗳️' };
     return icons[type] || '📣';
   }
 
@@ -632,7 +632,7 @@
     const div = document.createElement('div');
     div.className = 'broadcast-banner';
     div.innerHTML = `
-      <div class="banner-type">${typeIcon(alert.type)} ${alert.type || 'Alert'}</div>
+      <div class="banner-type">${typeIcon(alert.type)} ${alert.type || 'Alerta'}</div>
       <div class="banner-msg">${escHtml(alert.message)}</div>
       <button class="banner-dismiss" onclick="this.closest('.broadcast-banner').remove()">Dismiss</button>
     `;

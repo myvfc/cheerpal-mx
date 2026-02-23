@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CheerPal — Sign In</title>
+<title>CheerPal — Iniciar Sesión</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
   :root {
@@ -22,7 +22,6 @@
   .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; letter-spacing: 3px; color: var(--pink); margin-bottom: 8px; text-align: center; }
   .logo span { color: var(--navy); }
   .tagline { text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 32px; }
-
   .card {
     background: #fff; border: 2px solid var(--border); border-radius: 24px;
     padding: 40px 44px; width: 100%; max-width: 420px;
@@ -30,52 +29,27 @@
   }
   .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 2px; color: var(--navy); margin-bottom: 8px; }
   .card-sub { font-size: 0.88rem; font-weight: 700; color: var(--muted); line-height: 1.6; margin-bottom: 28px; }
-
-  /* Sent state */
   #sent-state { display: none; text-align: center; }
   .sent-icon { font-size: 3.5rem; margin-bottom: 16px; animation: bounce .6s ease; }
   @keyframes bounce { 0%{transform:scale(0)} 70%{transform:scale(1.2)} 100%{transform:scale(1)} }
   .sent-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 2px; color: var(--navy); margin-bottom: 8px; }
   .sent-sub { font-size: 0.88rem; font-weight: 700; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
-  .sent-email-box {
-    background: var(--pink-pale); border: 2px solid var(--pink);
-    border-radius: var(--radius); padding: 14px 18px;
-    font-size: 0.88rem; font-weight: 800; color: var(--navy);
-    margin-bottom: 16px;
-  }
+  .sent-email-box { background: var(--pink-pale); border: 2px solid var(--pink); border-radius: var(--radius); padding: 14px 18px; font-size: 0.88rem; font-weight: 800; color: var(--navy); margin-bottom: 16px; }
   .resend-link { font-size: 0.82rem; font-weight: 700; color: var(--muted); }
   .resend-link a { color: var(--pink); cursor: pointer; text-decoration: none; }
   .resend-link a:hover { text-decoration: underline; }
-
   .field { margin-bottom: 18px; }
   .field-label { font-size: 0.82rem; font-weight: 800; color: var(--text); margin-bottom: 7px; display: block; }
-  .field-input {
-    width: 100%; background: var(--light); border: 2px solid var(--border);
-    border-radius: var(--radius); color: var(--text);
-    font-family: 'Nunito', sans-serif; font-weight: 700;
-    font-size: 0.95rem; padding: 13px 16px; outline: none;
-    transition: border-color .2s;
-  }
+  .field-input { width: 100%; background: var(--light); border: 2px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.95rem; padding: 13px 16px; outline: none; transition: border-color .2s; }
   .field-input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); }
-
-  .submit-btn {
-    width: 100%; padding: 16px; background: var(--pink); border: none;
-    border-radius: var(--radius); color: #fff;
-    font-family: 'Nunito', sans-serif; font-weight: 900;
-    font-size: 1.05rem; cursor: pointer; transition: all .2s;
-    box-shadow: 0 4px 20px var(--pink-glow); margin-top: 4px;
-  }
+  .submit-btn { width: 100%; padding: 16px; background: var(--pink); border: none; border-radius: var(--radius); color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.05rem; cursor: pointer; transition: all .2s; box-shadow: 0 4px 20px var(--pink-glow); margin-top: 4px; }
   .submit-btn:hover { background: #e0245e; transform: translateY(-2px); }
   .submit-btn:disabled { background: #cbd5e1; box-shadow: none; transform: none; cursor: not-allowed; }
-
   #form-status { text-align: center; font-size: 0.82rem; font-weight: 700; margin-top: 10px; min-height: 18px; }
-
   .divider { height: 1px; background: var(--border); margin: 24px 0; }
   .bottom-links { text-align: center; }
   .bottom-links a { color: var(--pink); font-size: 0.85rem; font-weight: 700; text-decoration: none; }
   .bottom-links a:hover { text-decoration: underline; }
-  .bottom-links span { color: var(--muted); font-size: 0.85rem; font-weight: 700; margin: 0 8px; }
-
   .signup-link { text-align: center; margin-top: 20px; font-size: 0.85rem; font-weight: 700; color: var(--muted); }
   .signup-link a { color: var(--pink); text-decoration: none; }
   .signup-link a:hover { text-decoration: underline; }
@@ -84,117 +58,82 @@
 <body>
 
 <div class="logo">Cheer<span>Pal</span></div>
-<div class="tagline">Gym Admin Portal</div>
+<div class="tagline">Portal de Administración del Gimnasio</div>
 
 <div class="card">
-
-  <!-- Sign in form -->
   <div id="form-state">
-    <div class="card-title">Welcome Back</div>
-    <div class="card-sub">Enter your email and we'll send you a magic link to sign in — no password needed.</div>
-
+    <div class="card-title">Bienvenido de Vuelta</div>
+    <div class="card-sub">Ingresa tu correo y te enviaremos un enlace mágico para acceder — sin contraseña.</div>
     <div class="field">
-      <label class="field-label" for="login-email">Email Address</label>
-      <input class="field-input" type="email" id="login-email" placeholder="you@yourgym.com" autocomplete="email"/>
+      <label class="field-label" for="login-email">Correo Electrónico</label>
+      <input class="field-input" type="email" id="login-email" placeholder="tu@tugym.com" autocomplete="email"/>
     </div>
-
-    <button class="submit-btn" id="login-btn" onclick="sendLink()">Send Magic Link</button>
+    <button class="submit-btn" id="login-btn" onclick="sendLink()">Enviar Enlace Mágico</button>
     <div id="form-status"></div>
-
     <div class="divider"></div>
-
     <div class="bottom-links">
-      <a href="/admin.html">Go to Admin Dashboard</a>
+      <a href="/admin.html">Ir al Panel de Administración</a>
     </div>
   </div>
 
-  <!-- Sent state -->
   <div id="sent-state">
     <div class="sent-icon">📬</div>
-    <div class="sent-title">Check Your Email</div>
-    <div class="sent-sub">We sent a sign-in link to:</div>
+    <div class="sent-title">Revisa Tu Correo</div>
+    <div class="sent-sub">Enviamos un enlace de acceso a:</div>
     <div class="sent-email-box" id="sent-email-display">—</div>
-    <div class="resend-link">Didn't get it? <a onclick="resend()">Click to resend</a> or check your spam folder.</div>
+    <div class="resend-link">¿No lo recibiste? <a onclick="resend()">Haz clic para reenviar</a> o revisa tu carpeta de spam.</div>
   </div>
-
 </div>
 
 <div class="signup-link">
-  Don't have an account? <a href="/signup.html">Start your free trial</a>
+  ¿No tienes cuenta? <a href="/signup.html">Comienza tu prueba gratuita</a>
 </div>
 
 <script>
   const SUPABASE_URL = 'https://pexmoqldjbtpjxjtfsxs.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBleG1vcWxkamJ0cGp4anRmc3hzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTg3MDksImV4cCI6MjA4NzM3NDcwOX0.wZNaFCVuApL2ftozAxI52UBmmH6heeVV7co-0OptonA';
-  const BASE_URL     = 'https://cheerpal.fun';
+  const BASE_URL     = 'https://mx.cheerpal.fun';
 
   let sentEmail = '';
 
-  // Handle magic link callback
   const hash = window.location.hash;
   if (hash.includes('access_token')) {
     const params = new URLSearchParams(hash.substring(1));
     const token = params.get('access_token');
-    if (token) {
-      localStorage.setItem('cp_token', token);
-      window.location.href = '/admin.html';
-    }
+    if (token) { localStorage.setItem('cp_token', token); window.location.href = '/admin.html'; }
   }
 
   async function sendLink() {
     const email = document.getElementById('login-email').value.trim();
     const btn   = document.getElementById('login-btn');
     const status = document.getElementById('form-status');
-
-    if (!email || !email.includes('@')) {
-      status.style.color = '#ff4444';
-      status.textContent = '⚠️ Please enter a valid email address.';
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
-    status.textContent = '';
-
+    if (!email || !email.includes('@')) { status.style.color='#ff4444'; status.textContent='⚠️ Por favor ingresa un correo válido.'; return; }
+    btn.disabled = true; btn.textContent = 'Enviando…'; status.textContent = '';
     try {
       const res = await fetch(`${SUPABASE_URL}/auth/v1/magiclink`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
-        body: JSON.stringify({
-          email,
-          options: { emailRedirectTo: `${BASE_URL}/admin.html` }
-        })
+        body: JSON.stringify({ email, options: { emailRedirectTo: `${BASE_URL}/admin.html` } })
       });
-
       if (!res.ok) throw new Error();
-
       sentEmail = email;
       document.getElementById('form-state').style.display = 'none';
       document.getElementById('sent-state').style.display = 'block';
       document.getElementById('sent-email-display').textContent = email;
-
-    } catch(e) {
-      status.style.color = '#ff4444';
-      status.textContent = '❌ Could not send link. Please try again.';
-    }
-
-    btn.disabled = false;
-    btn.textContent = 'Send Magic Link';
+    } catch(e) { status.style.color='#ff4444'; status.textContent='❌ No se pudo enviar el enlace. Intenta de nuevo.'; }
+    btn.disabled = false; btn.textContent = 'Enviar Enlace Mágico';
   }
 
   async function resend() {
     if (!sentEmail) return;
     await fetch(`${SUPABASE_URL}/auth/v1/magiclink`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
       body: JSON.stringify({ email: sentEmail, options: { emailRedirectTo: `${BASE_URL}/admin.html` } })
     });
-    alert('Link resent! Check your inbox.');
+    alert('¡Enlace reenviado! Revisa tu bandeja de entrada.');
   }
 
-  document.getElementById('login-email')?.addEventListener('keydown', e => {
-    if (e.key === 'Enter') sendLink();
-  });
+  document.getElementById('login-email')?.addEventListener('keydown', e => { if (e.key === 'Enter') sendLink(); });
 </script>
 </body>
 </html>

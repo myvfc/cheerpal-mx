@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CheerPal — Admin del Gimnasio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --pink: #FF2D78;
+    --pink-glow: #ff2d7830;
+    --pink-pale: #fff0f5;
+    --pink-dim: #c4185a;
+    --yellow: #FFD600;
+    --yellow-pale: #fff8d6;
+    --green: #00c853;
+    --green-pale: #e8f5e9;
+    --red: #ff1744;
+    --navy: #0f172a;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --light: #f8fafc;
+    --panel: #ffffff;
+    --radius: 14px;
+    --radius-lg: 20px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--light);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── AUTH GATE ── */
+  #auth-gate {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, #fff0f5 0%, #fff8d6 50%, #ede9fe 100%);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999; flex-direction: column; gap: 20px;
+  }
+  .auth-card {
+    background: white; border: 2px solid var(--border);
+    border-radius: 24px; padding: 48px 52px;
+    text-align: center; max-width: 420px; width: 100%;
+    box-shadow: 0 8px 40px #ff2d7815;
+  }
+  .auth-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem; letter-spacing: 3px; color: var(--pink);
+    margin-bottom: 4px;
+  }
+  .auth-logo span { color: var(--navy); }
+  .auth-title { font-size: 1rem; font-weight: 800; color: var(--navy); margin: 20px 0 8px; }
+  .auth-sub { font-size: 0.85rem; font-weight: 700; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+  .auth-input {
+    width: 100%; background: var(--light); border: 2px solid var(--border);
+    border-radius: var(--radius); color: var(--text);
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.95rem; padding: 13px 16px; outline: none;
+    transition: border-color .2s; margin-bottom: 12px;
+  }
+  .auth-input:focus { border-color: var(--pink); }
+  .auth-btn {
+    width: 100%; padding: 14px; background: var(--pink);
+    border: none; border-radius: var(--radius);
+    color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: 1rem; cursor: pointer; transition: all .2s;
+  }
+  .auth-btn:hover { background: var(--pink-dim); }
+  .auth-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+  #auth-status { font-size: 0.82rem; font-weight: 700; margin-top: 10px; min-height: 20px; }
+
+  /* ── PAYWALL OVERLAY ── */
+  #paywall {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 500;
+    align-items: center; justify-content: center;
+  }
+  #paywall.show { display: flex; }
+  .paywall-card {
+    background: white; border-radius: 24px;
+    padding: 48px 52px; max-width: 480px; width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .paywall-icon { font-size: 3rem; margin-bottom: 16px; }
+  .paywall-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 2px; color: var(--navy);
+    margin-bottom: 12px;
+  }
+  .paywall-sub { font-size: 0.9rem; font-weight: 700; color: var(--muted); line-height: 1.6; margin-bottom: 28px; }
+  .paywall-plans { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  .paywall-plan {
+    border: 2px solid var(--border); border-radius: var(--radius);
+    padding: 16px 12px; cursor: pointer; transition: all .2s; text-align: center;
+  }
+  .paywall-plan:hover, .paywall-plan.selected { border-color: var(--pink); background: var(--pink-pale); }
+  .paywall-plan .plan-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 1px; color: var(--navy); }
+  .paywall-plan .plan-price { font-size: 1.4rem; font-weight: 900; color: var(--pink); }
+  .paywall-plan .plan-limit { font-size: 0.75rem; font-weight: 700; color: var(--muted); }
+  .paywall-btn {
+    width: 100%; padding: 16px; background: var(--pink);
+    border: none; border-radius: var(--radius);
+    color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: 1.05rem; cursor: pointer; transition: all .2s;
+  }
+  .paywall-btn:hover { background: var(--pink-dim); }
+
+  /* ── SIDEBAR + LAYOUT ── */
+  #app { display: none; min-height: 100vh; }
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 240px; flex-shrink: 0;
+    background: var(--navy);
+    display: flex; flex-direction: column;
+    position: sticky; top: 0; height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; letter-spacing: 3px; color: var(--pink);
+    border-bottom: 1px solid #1e293b;
+  }
+  .sidebar-logo span { color: #fff; }
+  .sidebar-gym {
+    padding: 14px 20px;
+    border-bottom: 1px solid #1e293b;
+  }
+  .sidebar-gym-name { font-size: 0.82rem; font-weight: 900; color: #fff; }
+  .sidebar-gym-plan {
+    font-size: 0.72rem; font-weight: 700;
+    background: var(--pink); color: #fff;
+    border-radius: 20px; padding: 2px 10px;
+    display: inline-block; margin-top: 4px;
+  }
+  .sidebar-gym-plan.trial { background: var(--yellow); color: var(--navy); }
+
+  .nav-section { padding: 16px 12px 8px; }
+  .nav-label { font-size: 0.68rem; font-weight: 900; color: #334155; letter-spacing: 2px; text-transform: uppercase; padding: 0 8px; margin-bottom: 4px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    cursor: pointer; transition: all .2s;
+    font-size: 0.88rem; font-weight: 700; color: #94a3b8;
+    text-decoration: none; margin-bottom: 2px;
+  }
+  .nav-item:hover { background: #1e293b; color: #fff; }
+  .nav-item.active { background: var(--pink); color: #fff; }
+  .nav-item .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+  .sidebar-bottom {
+    margin-top: auto; padding: 16px 12px;
+    border-top: 1px solid #1e293b;
+  }
+  .signout-btn {
+    width: 100%; padding: 10px;
+    background: transparent; border: 1px solid #334155;
+    border-radius: 8px; color: #64748b;
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.82rem; cursor: pointer; transition: all .2s;
+  }
+  .signout-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── MAIN CONTENT ── */
+  .main { flex: 1; padding: 32px; overflow-y: auto; }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 28px; flex-wrap: wrap; gap: 12px;
+  }
+  .page-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 2px; color: var(--navy);
+  }
+  .topbar-actions { display: flex; gap: 10px; align-items: center; }
+
+  /* ── TRIAL BANNER ── */
+  #trial-banner {
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  #trial-banner.active-trial {
+    background: var(--yellow-pale); border: 2px solid var(--yellow);
+  }
+  #trial-banner.expiring {
+    background: #fff3e0; border: 2px solid #ff9800;
+  }
+  #trial-banner.expired {
+    background: #fce4ec; border: 2px solid var(--red);
+  }
+  #trial-banner.paid {
+    background: var(--green-pale); border: 2px solid var(--green);
+  }
+  .trial-text { font-size: 0.9rem; font-weight: 800; color: var(--navy); }
+  .trial-text span { color: var(--pink); }
+  .upgrade-btn {
+    background: var(--pink); border: none; border-radius: 20px;
+    color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: 0.85rem; padding: 8px 20px; cursor: pointer;
+    white-space: nowrap; transition: all .2s;
+  }
+  .upgrade-btn:hover { background: var(--pink-dim); }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px; margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--panel); border: 2px solid var(--border);
+    border-radius: var(--radius-lg); padding: 20px 22px;
+    transition: all .2s;
+  }
+  .stat-card:hover { border-color: var(--pink); box-shadow: 0 4px 16px var(--pink-glow); }
+  .stat-icon { font-size: 1.5rem; margin-bottom: 10px; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem; color: var(--pink); letter-spacing: 1px; line-height: 1;
+  }
+  .stat-label { font-size: 0.78rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+  /* ── QUICK LINKS ── */
+  .quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+  .quick-link {
+    background: var(--panel); border: 2px solid var(--border);
+    border-radius: var(--radius-lg); padding: 20px 22px;
+    display: flex; align-items: center; gap: 14px;
+    text-decoration: none; transition: all .2s; cursor: pointer;
+  }
+  .quick-link:hover { border-color: var(--pink); box-shadow: 0 4px 16px var(--pink-glow); transform: translateY(-2px); }
+  .quick-link .ql-icon { font-size: 1.8rem; }
+  .quick-link .ql-text .ql-title { font-weight: 900; font-size: 0.9rem; color: var(--navy); }
+  .quick-link .ql-text .ql-desc { font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-top: 2px; }
+
+  /* ── PANELS ── */
+  .panels-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 900px) { .panels-row { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--panel); border: 2px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden;
+  }
+  .panel-header {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .panel-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem; letter-spacing: 2px; color: var(--navy);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .panel-badge {
+    background: var(--pink); color: #fff;
+    border-radius: 20px; padding: 2px 10px;
+    font-size: 0.75rem; letter-spacing: 1px;
+  }
+  .panel-body { padding: 20px 22px; }
+
+  /* ── INVITE FORM ── */
+  .invite-form { display: flex; flex-direction: column; gap: 10px; }
+  .form-row { display: flex; gap: 8px; }
+  .form-input {
+    flex: 1; background: var(--light); border: 2px solid var(--border);
+    border-radius: var(--radius); color: var(--text);
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.9rem; padding: 11px 14px; outline: none;
+    transition: border-color .2s;
+  }
+  .form-input:focus { border-color: var(--pink); }
+  .form-select {
+    background: var(--light); border: 2px solid var(--border);
+    border-radius: var(--radius); color: var(--text);
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.9rem; padding: 11px 14px; outline: none;
+    cursor: pointer;
+  }
+  .btn-pink {
+    background: var(--pink); border: none; border-radius: var(--radius);
+    color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: 0.88rem; padding: 11px 20px; cursor: pointer;
+    white-space: nowrap; transition: all .2s;
+  }
+  .btn-pink:hover { background: var(--pink-dim); }
+  .btn-pink:disabled { background: #cbd5e1; cursor: not-allowed; }
+  #invite-status { font-size: 0.8rem; font-weight: 700; min-height: 18px; }
+
+  /* ── MEMBER LIST ── */
+  .member-list { display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto; }
+  .member-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; background: var(--light);
+    border: 1px solid var(--border); border-radius: 10px;
+    gap: 10px;
+  }
+  .member-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+  .member-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--pink-pale); border: 2px solid var(--pink);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; font-weight: 900; color: var(--pink);
+    flex-shrink: 0;
+  }
+  .member-email { font-size: 0.82rem; font-weight: 700; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .member-team { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+  .member-status {
+    font-size: 0.7rem; font-weight: 800; border-radius: 20px;
+    padding: 2px 8px; white-space: nowrap; flex-shrink: 0;
+  }
+  .status-joined { background: var(--green-pale); color: var(--green); }
+  .status-invited { background: var(--yellow-pale); color: #b45309; }
+  .member-remove {
+    background: none; border: none; color: #cbd5e1;
+    cursor: pointer; font-size: 1rem; padding: 4px;
+    transition: color .2s; flex-shrink: 0;
+  }
+  .member-remove:hover { color: var(--red); }
+  .empty-list {
+    text-align: center; padding: 32px 20px;
+    color: var(--muted); font-size: 0.85rem; font-weight: 700;
+    border: 2px dashed var(--border); border-radius: var(--radius);
+  }
+
+  /* ── TEAMS ── */
+  .teams-list { display: flex; flex-direction: column; gap: 8px; }
+  .team-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 14px; background: var(--light);
+    border: 1px solid var(--border); border-radius: 10px;
+  }
+  .team-left { display: flex; align-items: center; gap: 10px; }
+  .team-emoji { font-size: 1.3rem; }
+  .team-name { font-weight: 900; font-size: 0.9rem; color: var(--navy); }
+  .team-count { font-size: 0.75rem; font-weight: 700; color: var(--muted); }
+  .team-remove {
+    background: none; border: none; color: #cbd5e1;
+    cursor: pointer; font-size: 1rem; padding: 4px;
+    transition: color .2s;
+  }
+  .team-remove:hover { color: var(--red); }
+  .add-team-row { display: flex; gap: 8px; margin-top: 12px; }
+
+  /* ── COPY URL ── */
+  .url-box {
+    background: var(--light); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 12px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; margin-top: 10px;
+  }
+  .url-text { font-size: 0.82rem; font-weight: 700; color: var(--navy); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .copy-btn {
+    background: var(--pink); border: none; border-radius: 8px;
+    color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: 0.78rem; padding: 6px 14px; cursor: pointer;
+    white-space: nowrap; transition: all .2s; flex-shrink: 0;
+  }
+  .copy-btn:hover { background: var(--pink-dim); }
+  .copy-btn.copied { background: var(--green); }
+
+  /* ── SECTION TABS ── */
+  .tab-nav { display: flex; gap: 4px; margin-bottom: 20px; }
+  .tab-btn {
+    background: transparent; border: 2px solid var(--border);
+    border-radius: 10px; padding: 8px 18px;
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 0.85rem; color: var(--muted); cursor: pointer;
+    transition: all .2s;
+  }
+  .tab-btn.active { border-color: var(--pink); color: var(--pink); background: var(--pink-pale); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { padding: 20px 16px; }
+    .quick-links { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ AUTH GATE ═══ -->
+<div id="auth-gate">
+  <div class="auth-card">
+    <div class="auth-logo">Cheer<span>Pal</span></div>
+    <div style="font-size:0.78rem;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Admin del Gimnasio</div>
+    <div class="auth-title">Inicia sesión en tu gimnasio</div>
+    <div class="auth-sub">Ingresa tu correo y te enviaremos un enlace mágico — sin contraseña.</div>
+    <input class="auth-input" type="email" id="auth-email" placeholder="tu@correo.com"/>
+    <button class="auth-btn" id="auth-btn" onclick="sendMagicLink()">Enviar Enlace Mágico</button>
+    <div id="auth-status"></div>
+  </div>
+</div>
+
+<!-- ═══ PAYWALL ═══ -->
+<div id="paywall">
+  <div class="paywall-card">
+    <div class="paywall-icon">⏰</div>
+    <div class="paywall-title">Tu Prueba Ha Terminado</div>
+    <div class="paywall-sub">Elige un plan para mantener CheerPal activo para tus familias. Sin cuota de instalación, cancela en cualquier momento.</div>
+    <div class="paywall-plans">
+      <div class="paywall-plan selected" data-plan="starter" onclick="selectPlan(this)">
+        <div class="plan-name">Básico</div>
+        <div class="plan-price">$19<span style="font-size:0.9rem;font-weight:700;">/mo</span></div>
+        <div class="plan-limit">Hasta 50 familias</div>
+      </div>
+      <div class="paywall-plan" data-plan="growth" onclick="selectPlan(this)">
+        <div class="plan-name">Crecimiento</div>
+        <div class="plan-price">$39<span style="font-size:0.9rem;font-weight:700;">/mo</span></div>
+        <div class="plan-limit">Hasta 150 familias</div>
+      </div>
+      <div class="paywall-plan" data-plan="pro" onclick="selectPlan(this)">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$69<span style="font-size:0.9rem;font-weight:700;">/mo</span></div>
+        <div class="plan-limit">Hasta 400 familias</div>
+      </div>
+      <div class="paywall-plan" data-plan="elite" onclick="selectPlan(this)">
+        <div class="plan-name">Élite</div>
+        <div class="plan-price">$99<span style="font-size:0.9rem;font-weight:700;">/mo</span></div>
+        <div class="plan-limit">Ilimitado + Marca Propia</div>
+      </div>
+    </div>
+    <button class="paywall-btn" onclick="goToStripe()">Continuar al Pago →</button>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="app">
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">Cheer<span>Pal</span></div>
+      <div class="sidebar-gym">
+        <div class="sidebar-gym-name" id="sidebar-gym-name">Cargando…</div>
+        <span class="sidebar-gym-plan trial" id="sidebar-plan-badge">Prueba</span>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Panel</div>
+        <a class="nav-item active" onclick="showTab('overview')"><span class="nav-icon">📊</span>Resumen</a>
+        <a class="nav-item" onclick="showTab('families')"><span class="nav-icon">👨‍👩‍👧</span>Familias</a>
+        <a class="nav-item" onclick="showTab('teams')"><span class="nav-icon">🏆</span>Equipos</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Herramientas en Vivo</div>
+        <a class="nav-item" id="controller-link" href="#" target="_blank"><span class="nav-icon">📡</span>Controlador de Transmisión</a>
+        <a class="nav-item" id="family-link" href="#" target="_blank"><span class="nav-icon">📱</span>Enlace de App para Familias</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Cuenta</div>
+        <a class="nav-item" onclick="showPaywall()"><span class="nav-icon">💳</span>Suscripción</a>
+      </div>
+
+      <div class="sidebar-bottom">
+        <button class="signout-btn" onclick="signOut()">Cerrar Sesión</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- Trial Banner -->
+      <div id="trial-banner" class="active-trial" style="display:none;">
+        <div class="trial-text" id="trial-text">⏳ Prueba activa</div>
+        <button class="upgrade-btn" onclick="showPaywall()">Actualizar Ahora</button>
+      </div>
+
+      <!-- TAB: OVERVIEW -->
+      <div id="tab-overview">
+        <div class="topbar">
+          <div class="page-title" id="overview-gym-name">Tu Gimnasio</div>
+          <div class="topbar-actions">
+            <button class="btn-pink" onclick="showTab('families')">+ Invitar Familias</button>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon">👨‍👩‍👧</div>
+            <div class="stat-num" id="stat-total">0</div>
+            <div class="stat-label">Familias Invitadas</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-num" id="stat-joined">0</div>
+            <div class="stat-label">Unidas</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-num" id="stat-teams">0</div>
+            <div class="stat-label">Equipos</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-num" id="stat-días">—</div>
+            <div class="stat-label">Días de Prueba Restantes</div>
+          </div>
+        </div>
+
+        <!-- Quick links -->
+        <div class="quick-links">
+          <div class="quick-link" id="ql-controller">
+            <div class="ql-icon">📡</div>
+            <div class="ql-text">
+              <div class="ql-title">Abrir Controlador de Transmisión</div>
+              <div class="ql-desc">Envía alertas a tus familias</div>
+            </div>
+          </div>
+          <div class="quick-link" onclick="copyFamilyLink()">
+            <div class="ql-icon">📱</div>
+            <div class="ql-text">
+              <div class="ql-title">Copiar Enlace de App para Familias</div>
+              <div class="ql-desc">Comparte esto con tus familias</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Family app URL -->
+        <div class="panel" style="margin-bottom:20px;">
+          <div class="panel-header">
+            <div class="panel-title">📎 URL de App para Familias</div>
+          </div>
+          <div class="panel-body">
+            <p style="font-size:0.85rem;font-weight:700;color:var(--muted);margin-bottom:10px;">Comparte este enlace con tus familias. Lo guardan como favorito y lo usan en cada competencia.</p>
+            <div class="url-box">
+              <span class="url-text" id="family-url-display">—</span>
+              <button class="copy-btn" id="copy-family-btn" onclick="copyFamilyLink()">Copiar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent messages preview -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">💬 Mensajes Recientes de Familias <span class="panel-badge" id="msg-badge">0</span></div>
+            <a id="controller-link-2" href="#" target="_blank" style="font-size:0.82rem;font-weight:800;color:var(--pink);text-decoration:none;">Abrir Controlador →</a>
+          </div>
+          <div class="panel-body">
+            <div id="recent-messages"><div class="empty-list">Sin mensajes aún. Los mensajes de las familias aparecen aquí.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: FAMILIES -->
+      <div id="tab-families" style="display:none;">
+        <div class="topbar">
+          <div class="page-title">Familias</div>
+        </div>
+
+        <div class="panels-row">
+          <!-- Invite panel -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">✉️ Invitar a una Familia</div>
+            </div>
+            <div class="panel-body">
+              <div class="invite-form">
+                <input class="form-input" type="email" id="invite-email" placeholder="padre@correo.com"/>
+                <div class="form-row">
+                  <input class="form-input" type="text" id="invite-name" placeholder="Nombre del padre (opcional)"/>
+                  <select class="form-select" id="invite-team">
+                    <option value="">Todos los Equipos</option>
+                  </select>
+                </div>
+                <button class="btn-pink" id="invite-btn" onclick="inviteFamily()">Enviar Invitación</button>
+                <div id="invite-status"></div>
+              </div>
+              <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+                <div style="font-size:0.8rem;font-weight:800;color:var(--muted);margin-bottom:8px;">ENLACE DE APP PARA FAMILIAS</div>
+                <p style="font-size:0.82rem;font-weight:700;color:var(--muted);margin-bottom:8px;">O comparte este enlace directamente — las familias lo tocan para unirse.</p>
+                <div class="url-box">
+                  <span class="url-text" id="family-url-display-2">—</span>
+                  <button class="copy-btn" id="copy-btn-2" onclick="copyFamilyLink2()">Copiar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Member list -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">👨‍👩‍👧 Familias Invitadas <span class="panel-badge" id="member-count">0</span></div>
+            </div>
+            <div class="panel-body">
+              <div class="tab-nav">
+                <button class="tab-btn active" onclick="filterMembers('all', this)">Todas</button>
+                <button class="tab-btn" onclick="filterMembers('joined', this)">Unidas</button>
+                <button class="tab-btn" onclick="filterMembers('invited', this)">Pendientes</button>
+              </div>
+              <div class="member-list" id="member-list">
+                <div class="empty-list">Sin familias invitadas aún.<br/>Invita a tu primera familia arriba.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: TEAMS -->
+      <div id="tab-teams" style="display:none;">
+        <div class="topbar">
+          <div class="page-title">Equipos</div>
+        </div>
+        <div class="panel" style="max-width:560px;">
+          <div class="panel-header">
+            <div class="panel-title">🏆 Tus Equipos</div>
+          </div>
+          <div class="panel-body">
+            <div class="teams-list" id="teams-list"></div>
+            <div class="add-team-row">
+              <input class="form-input" type="text" id="new-team-input" placeholder="Nombre del nuevo equipo…" maxlength="30"/>
+              <select class="form-select" id="new-team-emoji">
+                <option>🏆</option><option>⭐</option><option>🌟</option>
+                <option>🔥</option><option>💫</option><option>🎀</option>
+                <option>👑</option><option>⚡</option><option>🦋</option><option>🌈</option>
+              </select>
+              <button class="btn-pink" onclick="addTeam()">+ Agregar</button>
+            </div>
+            <p style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-top:10px;">Los equipos aparecen en el controlador de transmisión y la app de familias.</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  // ── CONFIG ──
+  const SUPABASE_URL = 'https://pexmoqldjbtpjxjtfsxs.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBleG1vcWxkamJ0cGp4anRmc3hzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTg3MDksImV4cCI6MjA4NzM3NDcwOX0.wZNaFCVuApL2ftozAxI52UBmmH6heeVV7co-0OptonA';
+  const BASE_URL     = 'https://mx.cheerpal.fun';
+
+  // ── STATE ──
+  let gymData    = null;
+  let members    = [];
+  let teams      = [];
+  let allMembers = [];
+  let selectedPaywallPlan = 'starter';
+
+  // ── STRIPE PRICE IDs (replace with real ones) ──
+  const STRIPE_LINKS = {
+    starter: 'https://buy.stripe.com/YOUR_STARTER_LINK',
+    growth:  'https://buy.stripe.com/YOUR_GROWTH_LINK',
+    pro:     'https://buy.stripe.com/YOUR_PRO_LINK',
+    elite:   'https://buy.stripe.com/YOUR_ELITE_LINK'
+  };
+
+  // ════════════════════════════════════════
+  // AUTH
+  // ════════════════════════════════════════
+  async function init() {
+    // Check for magic link token in URL hash
+    const hash = window.location.hash;
+    if (hash.includes('access_token')) {
+      await handleMagicLinkCallback();
+      return;
+    }
+
+    // Check for stored session
+    const session = getSession();
+    if (session) {
+      await loadGym(session);
+    }
+    // Otherwise show auth gate (already visible by default)
+  }
+
+  async function handleMagicLinkCallback() {
+    const params = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = params.get('access_token');
+    const email = params.get('email') || '';
+
+    if (!accessToken) { return; }
+
+    // Store session
+    localStorage.setItem('cp_token', accessToken);
+
+    // Get user info from Supabase
+    try {
+      const userRes = await supaFetch('GET', '/auth/v1/user', null, accessToken);
+      const user = await userRes.json();
+      localStorage.setItem('cp_user', JSON.stringify(user));
+      localStorage.setItem('cp_email', user.email || email);
+
+      // Clean URL
+      window.history.replaceState({}, '', window.location.pathname + window.location.search);
+
+      await loadGym({ token: accessToken, user });
+    } catch(e) {
+      showAuthGate();
+    }
+  }
+
+  function getSession() {
+    const token = localStorage.getItem('cp_token');
+    const user  = localStorage.getItem('cp_user');
+    if (token && user) return { token, user: JSON.parse(user) };
+    return null;
+  }
+
+  async function sendMagicLink() {
+    const email = document.getElementById('auth-email').value.trim();
+    const btn   = document.getElementById('auth-btn');
+    const status = document.getElementById('auth-status');
+    if (!email || !email.includes('@')) { status.style.color='#ff4444'; status.textContent='Por favor ingresa un correo válido.'; return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    status.textContent = '';
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/auth/v1/magiclink`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
+        body: JSON.stringify({
+          email,
+          options: { emailRedirectTo: `${BASE_URL}/admin.html` }
+        })
+      });
+      if (!res.ok) throw new Error();
+      status.style.color = 'var(--green)';
+      status.textContent = '✅ ¡Revisa tu bandeja de entrada para el enlace mágico!';
+    } catch(e) {
+      status.style.color = '#ff4444';
+      status.textContent = '❌ No se pudo enviar el enlace. Intenta de nuevo.';
+    }
+    btn.disabled = false;
+    btn.textContent = 'Enviar Enlace Mágico';
+  }
+
+  function showAuthGate() {
+    document.getElementById('auth-gate').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+  }
+
+  function signOut() {
+    localStorage.removeItem('cp_token');
+    localStorage.removeItem('cp_user');
+    localStorage.removeItem('cp_email');
+    showAuthGate();
+  }
+
+  // ════════════════════════════════════════
+  // LOAD GYM
+  // ════════════════════════════════════════
+  async function loadGym(session) {
+    const email = session.user?.email || localStorage.getItem('cp_email');
+    if (!email) { showAuthGate(); return; }
+
+    try {
+      // Get gym slug from URL params or find by owner email
+      const urlParams = new URLSearchParams(window.location.search);
+      const slugParam = urlParams.get('gym');
+
+      let gymQuery = slugParam
+        ? `slug=eq.${slugParam}`
+        : `owner_email=eq.${encodeURIComponent(email)}`;
+
+      const res = await supaFetch('GET', `/rest/v1/gyms?${gymQuery}&limit=1`);
+      const data = await res.json();
+      if (!data.length) { showAuthGate(); return; }
+
+      gymData = data[0];
+
+      // Update owner_id if not set
+      if (!gymData.owner_id && session.user?.id) {
+        await supaFetch('PATCH', `/rest/v1/gyms?gym_id=eq.${gymData.gym_id}`,
+          { owner_id: session.user.id });
+      }
+
+      // Hide auth gate, show app
+      document.getElementById('auth-gate').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+
+      // Populate UI
+      populateGymUI();
+      await loadTeams();
+      await loadMembers();
+      await loadRecentMessages();
+      checkTrialStatus();
+
+    } catch(e) {
+      showAuthGate();
+    }
+  }
+
+  function populateGymUI() {
+    const name = gymData.name;
+    const slug = gymData.slug;
+
+    document.getElementById('sidebar-gym-name').textContent = name;
+    document.getElementById('overview-gym-name').textContent = name;
+    document.title = `${name} — CheerPal Admin`;
+
+    const familyUrl = `${BASE_URL}/family.html?gym=${slug}`;
+    const controllerUrl = `${BASE_URL}/controller.html?gym=${slug}`;
+
+    document.getElementById('family-url-display').textContent = familyUrl;
+    document.getElementById('family-url-display-2').textContent = familyUrl;
+    document.getElementById('controller-link').href = controllerUrl;
+    document.getElementById('controller-link-2').href = controllerUrl;
+    document.getElementById('ql-controller').onclick = () => window.open(controllerUrl, '_blank');
+  }
+
+  // ════════════════════════════════════════
+  // TRIAL / PAYWALL
+  // ════════════════════════════════════════
+  function checkTrialStatus() {
+    if (!gymData) return;
+    const banner = document.getElementById('trial-banner');
+    const badge  = document.getElementById('sidebar-plan-badge');
+    banner.style.display = 'flex';
+
+    if (gymData.plan !== 'trial') {
+      banner.className = 'paid';
+      document.getElementById('trial-text').textContent = `✅ Plan ${gymData.plan.charAt(0).toUpperCase() + gymData.plan.slice(1)} — Activo`;
+      banner.querySelector('.upgrade-btn').style.display = 'none';
+      badge.textContent = gymData.plan.charAt(0).toUpperCase() + gymData.plan.slice(1);
+      badge.className = 'sidebar-gym-plan';
+      document.getElementById('stat-días').textContent = '∞';
+      return;
+    }
+
+    const trialEnd = new Date(gymData.trial_ends_at);
+    const now      = new Date();
+    const díasLeft = Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24));
+
+    document.getElementById('stat-días').textContent = Math.max(0, díasLeft);
+
+    if (díasLeft <= 0) {
+      // Expired — show paywall
+      document.getElementById('paywall').classList.add('show');
+      banner.style.display = 'none';
+    } else if (díasLeft <= 2) {
+      banner.className = 'expiring';
+      document.getElementById('trial-text').innerHTML = `⚠️ Trial expires in <span>${díasLeft} día${díasLeft === 1 ? '' : 's'}</span> — actualiza para mantener CheerPal activo.`;
+    } else {
+      banner.className = 'active-trial';
+      document.getElementById('trial-text').innerHTML = `⏳ Prueba gratuita — <span>${díasLeft} días restantes</span>. Sin tarjeta de crédito todavía.`;
+    }
+  }
+
+  function showPaywall() {
+    document.getElementById('paywall').classList.add('show');
+  }
+
+  function selectPlan(el) {
+    document.querySelectorAll('.paywall-plan').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedPaywallPlan = el.dataset.plan;
+  }
+
+  function goToStripe() {
+    const url = STRIPE_LINKS[selectedPaywallPlan];
+    if (url && url.includes('stripe.com')) {
+      window.open(url, '_blank');
+    } else {
+      alert('Stripe links not configured yet. Add your Stripe payment links to the STRIPE_LINKS object.');
+    }
+  }
+
+  // ════════════════════════════════════════
+  // TEAMS
+  // ════════════════════════════════════════
+  async function loadTeams() {
+    const res = await supaFetch('GET', `/rest/v1/gym_teams?gym_id=eq.${gymData.gym_id}&order=order_num.asc`);
+    teams = await res.json();
+    renderTeams();
+    populateTeamSelects();
+    document.getElementById('stat-teams').textContent = teams.length;
+  }
+
+  function renderTeams() {
+    const list = document.getElementById('teams-list');
+    if (!teams.length) {
+      list.innerHTML = '<div class="empty-list">Sin equipos aún. Agrega tu primer equipo abajo.</div>';
+      return;
+    }
+    list.innerHTML = teams.map(t => {
+      const count = members.filter(m => m.team === t.name).length;
+      return `<div class="team-item" data-id="${t.id}">
+        <div class="team-left">
+          <span class="team-emoji">${t.emoji || '⭐'}</span>
+          <div>
+            <div class="team-name">${escHtml(t.name)}</div>
+            <div class="team-count">${count} familia${count === 1 ? '' : 's'}</div>
+          </div>
+        </div>
+        <button class="team-remove" onclick="removeTeam(${t.id})">✕</button>
+      </div>`;
+    }).join('');
+  }
+
+  function populateTeamSelects() {
+    const sel = document.getElementById('invite-team');
+    sel.innerHTML = '<option value="">Todos los Equipos</option>' +
+      teams.map(t => `<option value="${escHtml(t.name)}">${t.emoji} ${escHtml(t.name)}</option>`).join('');
+  }
+
+  async function addTeam() {
+    const input = document.getElementById('new-team-input');
+    const emoji = document.getElementById('new-team-emoji').value;
+    const name  = input.value.trim();
+    if (!name) return;
+
+    await supaFetch('POST', '/rest/v1/gym_teams', {
+      gym_id: gymData.gym_id,
+      name, emoji,
+      order_num: teams.length
+    });
+    input.value = '';
+    await loadTeams();
+  }
+
+  document.getElementById('new-team-input')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') addTeam();
+  });
+
+  async function removeTeam(id) {
+    if (!confirm('¿Eliminar este equipo?')) return;
+    await supaFetch('DELETE', `/rest/v1/gym_teams?id=eq.${id}`);
+    await loadTeams();
+  }
+
+  // ════════════════════════════════════════
+  // MEMBERS / FAMILIES
+  // ════════════════════════════════════════
+  async function loadMembers() {
+    const res = await supaFetch('GET', `/rest/v1/gym_members?gym_id=eq.${gymData.gym_id}&order=invited_at.desc`);
+    allMembers = await res.json();
+    members = allMembers;
+    renderMembers(members);
+    document.getElementById('stat-total').textContent  = allMembers.length;
+    document.getElementById('stat-joined').textContent = allMembers.filter(m => m.joined_at).length;
+    document.getElementById('member-count').textContent = allMembers.length;
+    renderTeams(); // refresh team counts
+  }
+
+  function renderMembers(list) {
+    const el = document.getElementById('member-list');
+    if (!list.length) {
+      el.innerHTML = '<div class="empty-list">Sin familias aún.</div>';
+      return;
+    }
+    el.innerHTML = list.map(m => {
+      const initials = (m.name || m.email || '?')[0].toUpperCase();
+      const joined   = m.joined_at;
+      return `<div class="member-item">
+        <div class="member-left">
+          <div class="member-avatar">${initials}</div>
+          <div>
+            <div class="member-email">${escHtml(m.email)}</div>
+            <div class="member-team">${m.team ? escHtml(m.team) : 'Todos los Equipos'}</div>
+          </div>
+        </div>
+        <span class="member-status ${joined ? 'status-joined' : 'status-invited'}">${joined ? 'Unida' : 'Invitada'}</span>
+        <button class="member-remove" onclick="removeMember(${m.id})" title="Remove">✕</button>
+      </div>`;
+    }).join('');
+  }
+
+  function filterMembers(filter, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (filter === 'joined')  renderMembers(allMembers.filter(m => m.joined_at));
+    else if (filter === 'invited') renderMembers(allMembers.filter(m => !m.joined_at));
+    else renderMembers(allMembers);
+  }
+
+  async function inviteFamily() {
+    const email = document.getElementById('invite-email').value.trim();
+    const name  = document.getElementById('invite-name').value.trim();
+    const team  = document.getElementById('invite-team').value;
+    const btn   = document.getElementById('invite-btn');
+    const status = document.getElementById('invite-status');
+
+    if (!email || !email.includes('@')) {
+      status.style.color = '#ff4444';
+      status.textContent = '⚠️ Por favor ingresa un correo válido.';
+      return;
+    }
+
+    btn.disabled = true;
+    status.style.color = 'var(--muted)';
+    status.textContent = 'Enviando invitación…';
+
+    try {
+      // Add to gym_members
+      await supaFetch('POST', '/rest/v1/gym_members', {
+        gym_id: gymData.gym_id,
+        email, name: name || null,
+        team: team || null,
+        role: 'family',
+        invited_at: new Date().toISOString()
+      });
+
+      // Send magic link
+      const familyUrl = `${BASE_URL}/family.html?gym=${gymData.slug}`;
+      await fetch(`${SUPABASE_URL}/auth/v1/magiclink`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
+        body: JSON.stringify({
+          email,
+          options: { emailRedirectTo: familyUrl }
+        })
+      });
+
+      status.style.color = 'var(--green)';
+      status.textContent = `✅ Invitación enviada a ${email}!`;
+      document.getElementById('invite-email').value = '';
+      document.getElementById('invite-name').value = '';
+      await loadMembers();
+      setTimeout(() => { status.textContent = ''; }, 4000);
+    } catch(e) {
+      status.style.color = '#ff4444';
+      status.textContent = '❌ No se pudo enviar la invitación. Intenta de nuevo.';
+    }
+    btn.disabled = false;
+  }
+
+  async function removeMember(id) {
+    if (!confirm('¿Eliminar a esta familia de tu gimnasio?')) return;
+    await supaFetch('DELETE', `/rest/v1/gym_members?id=eq.${id}`);
+    await loadMembers();
+  }
+
+  // ════════════════════════════════════════
+  // RECENT MESSAGES
+  // ════════════════════════════════════════
+  async function loadRecentMessages() {
+    const res = await supaFetch('GET', `/rest/v1/fan_messages?gym_id=eq.${gymData.gym_id}&status=eq.pending&order=created_at.desc&limit=5`);
+    const msgs = await res.json();
+    document.getElementById('msg-badge').textContent = msgs.length;
+    const el = document.getElementById('recent-messages');
+    if (!msgs.length) {
+      el.innerHTML = '<div class="empty-list">Sin mensajes aún.</div>';
+      return;
+    }
+    el.innerHTML = msgs.map(m => {
+      const time = new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+      return `<div style="padding:10px 14px;background:var(--light);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;">
+        <div style="font-size:0.8rem;font-weight:900;color:var(--pink);">${escHtml(m.name||'Anonymous')} <span style="color:var(--muted);font-weight:700;">· ${time}</span></div>
+        <div style="font-size:0.88rem;font-weight:700;color:var(--navy);margin-top:4px;">${escHtml(m.message)}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ════════════════════════════════════════
+  // NAVIGATION
+  // ════════════════════════════════════════
+  function showTab(tab) {
+    ['overview','families','teams'].forEach(t => {
+      document.getElementById(`tab-${t}`).style.display = t === tab ? 'block' : 'none';
+    });
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const navMap = { overview: 0, families: 1, teams: 2 };
+    document.querySelectorAll('.nav-item')[navMap[tab]]?.classList.add('active');
+  }
+
+  // ════════════════════════════════════════
+  // COPY URLS
+  // ════════════════════════════════════════
+  function copyFamilyLink() {
+    const url = document.getElementById('family-url-display').textContent;
+    navigator.clipboard.writeText(url);
+    const btn = document.getElementById('copy-family-btn');
+    btn.textContent = '¡Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+  }
+
+  function copyFamilyLink2() {
+    const url = document.getElementById('family-url-display-2').textContent;
+    navigator.clipboard.writeText(url);
+    const btn = document.getElementById('copy-btn-2');
+    btn.textContent = '¡Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+  }
+
+  // ════════════════════════════════════════
+  // SUPABASE HELPER
+  // ════════════════════════════════════════
+  async function supaFetch(method, path, body = null, token = null) {
+    const t = token || localStorage.getItem('cp_token') || '';
+    const headers = {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${t || SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    };
+    const opts = { method, headers };
+    if (body) opts.body = JSON.stringify(body);
+    return fetch(`${SUPABASE_URL}${path}`, opts);
+  }
+
+  function escHtml(str) {
+    return String(str||'')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── KEYBOARD ──
+  document.getElementById('auth-email')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendMagicLink();
+  });
+
+  // ── BOOT ──
+  init();
+</script>
+</body>
+</html>

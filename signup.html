@@ -1,194 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CheerPal — Start Your Free Trial</title>
+<title>CheerPal — Comienza Tu Prueba Gratuita</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
   :root {
-    --pink: #FF2D78;
-    --pink-glow: #ff2d7840;
-    --pink-pale: #fff0f5;
-    --yellow: #FFD600;
-    --navy: #0f172a;
-    --text: #1e293b;
-    --muted: #64748b;
-    --border: #e2e8f0;
-    --light: #f8fafc;
-    --white: #ffffff;
-    --green: #00c853;
-    --radius: 14px;
+    --pink: #FF2D78; --pink-glow: #ff2d7840; --pink-pale: #fff0f5;
+    --yellow: #FFD600; --navy: #0f172a; --text: #1e293b; --muted: #64748b;
+    --border: #e2e8f0; --light: #f8fafc; --white: #ffffff; --green: #00c853; --radius: 14px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Nunito', sans-serif;
     background: linear-gradient(135deg, #fff0f5 0%, #fff8d6 50%, #ede9fe 100%);
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 24px 16px;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px 16px;
   }
-
-  /* ── LOGO ── */
-  .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.4rem; letter-spacing: 3px;
-    color: var(--pink); margin-bottom: 8px;
-    text-align: center;
-  }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; letter-spacing: 3px; color: var(--pink); margin-bottom: 8px; text-align: center; }
   .logo span { color: var(--navy); }
-  .tagline {
-    text-align: center; font-size: 0.85rem;
-    font-weight: 700; color: var(--muted);
-    letter-spacing: 1px; text-transform: uppercase;
-    margin-bottom: 32px;
-  }
-
-  /* ── CARD ── */
-  .card {
-    background: var(--white);
-    border: 2px solid var(--border);
-    border-radius: 24px;
-    padding: 40px 44px;
-    width: 100%; max-width: 480px;
-    box-shadow: 0 8px 40px rgba(255,45,120,0.1);
-  }
-
-  /* ── TRIAL BADGE ── */
-  .trial-badge {
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    background: var(--pink-pale); border: 2px solid var(--pink);
-    border-radius: 12px; padding: 12px 20px;
-    margin-bottom: 28px;
-  }
+  .tagline { text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 32px; }
+  .card { background: var(--white); border: 2px solid var(--border); border-radius: 24px; padding: 40px 44px; width: 100%; max-width: 480px; box-shadow: 0 8px 40px rgba(255,45,120,0.1); }
+  .trial-badge { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--pink-pale); border: 2px solid var(--pink); border-radius: 12px; padding: 12px 20px; margin-bottom: 28px; }
   .trial-badge .icon { font-size: 1.4rem; }
   .trial-badge .text { font-size: 0.88rem; font-weight: 800; color: var(--navy); line-height: 1.4; }
   .trial-badge .text span { color: var(--pink); }
-
-  /* ── FORM ── */
-  .card-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem; letter-spacing: 2px;
-    color: var(--navy); margin-bottom: 24px;
-  }
+  .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 2px; color: var(--navy); margin-bottom: 24px; }
   .field { margin-bottom: 18px; }
-  .field-label {
-    font-size: 0.82rem; font-weight: 800;
-    color: var(--text); letter-spacing: 0.5px;
-    margin-bottom: 7px; display: block;
-  }
+  .field-label { font-size: 0.82rem; font-weight: 800; color: var(--text); letter-spacing: 0.5px; margin-bottom: 7px; display: block; }
   .field-label span { color: var(--pink); }
-  input[type="text"],
-  input[type="email"] {
-    width: 100%;
-    background: var(--light);
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.95rem; font-weight: 700;
-    padding: 13px 16px; outline: none;
-    transition: border-color .2s, box-shadow .2s;
-  }
-  input:focus {
-    border-color: var(--pink);
-    box-shadow: 0 0 0 3px var(--pink-glow);
-    background: var(--white);
-  }
+  input[type="text"], input[type="email"] { width: 100%; background: var(--light); border: 2px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 700; padding: 13px 16px; outline: none; transition: border-color .2s, box-shadow .2s; }
+  input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px var(--pink-glow); background: var(--white); }
   input.error { border-color: #ff4444; }
   .field-hint { font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-top: 5px; }
   .field-error { font-size: 0.75rem; font-weight: 700; color: #ff4444; margin-top: 5px; display: none; }
-
-  /* Slug preview */
-  .slug-preview {
-    background: var(--light); border: 2px solid var(--border);
-    border-radius: var(--radius); padding: 10px 14px;
-    font-size: 0.82rem; font-weight: 700; color: var(--muted);
-    margin-top: 6px;
-  }
+  .slug-preview { background: var(--light); border: 2px solid var(--border); border-radius: var(--radius); padding: 10px 14px; font-size: 0.82rem; font-weight: 700; color: var(--muted); margin-top: 6px; }
   .slug-preview span { color: var(--pink); }
-
-  /* Teams row */
   .teams-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-  .team-tag {
-    background: var(--pink-pale); border: 2px solid var(--pink);
-    border-radius: 20px; padding: 5px 14px;
-    font-size: 0.8rem; font-weight: 800; color: var(--pink);
-    display: flex; align-items: center; gap: 6px; cursor: pointer;
-    transition: all .2s;
-  }
+  .team-tag { background: var(--pink-pale); border: 2px solid var(--pink); border-radius: 20px; padding: 5px 14px; font-size: 0.8rem; font-weight: 800; color: var(--pink); display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all .2s; }
   .team-tag .remove { font-size: 0.9rem; opacity: 0.6; }
   .team-tag:hover .remove { opacity: 1; }
   .team-input-row { display: flex; gap: 8px; margin-top: 8px; }
   .team-input-row input { flex: 1; }
-  .add-team-btn {
-    background: var(--pink); border: none; border-radius: var(--radius);
-    color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900;
-    font-size: 0.9rem; padding: 0 18px; cursor: pointer; white-space: nowrap;
-    transition: background .2s;
-  }
+  .add-team-btn { background: var(--pink); border: none; border-radius: var(--radius); color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.9rem; padding: 0 18px; cursor: pointer; white-space: nowrap; transition: background .2s; }
   .add-team-btn:hover { background: #e0245e; }
-
-  /* Submit */
-  #submit-btn {
-    width: 100%; padding: 16px;
-    background: var(--pink); border: none;
-    border-radius: var(--radius); color: #fff;
-    font-family: 'Nunito', sans-serif; font-weight: 900;
-    font-size: 1.1rem; cursor: pointer;
-    transition: all .2s; margin-top: 8px;
-    box-shadow: 0 4px 20px var(--pink-glow);
-  }
+  #submit-btn { width: 100%; padding: 16px; background: var(--pink); border: none; border-radius: var(--radius); color: #fff; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: all .2s; margin-top: 8px; box-shadow: 0 4px 20px var(--pink-glow); }
   #submit-btn:hover { background: #e0245e; transform: translateY(-2px); box-shadow: 0 8px 28px var(--pink-glow); }
   #submit-btn:disabled { background: #cbd5e1; box-shadow: none; transform: none; cursor: not-allowed; }
-
-  /* Status */
-  #form-status {
-    text-align: center; font-size: 0.85rem; font-weight: 700;
-    margin-top: 12px; min-height: 20px;
-  }
-
-  /* Divider */
+  #form-status { text-align: center; font-size: 0.85rem; font-weight: 700; margin-top: 12px; min-height: 20px; }
   .divider { height: 1px; background: var(--border); margin: 24px 0; }
-
-  /* Checklist */
   .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .checklist li {
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: 0.85rem; font-weight: 700; color: var(--text); line-height: 1.4;
-  }
+  .checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; font-weight: 700; color: var(--text); line-height: 1.4; }
   .checklist .check { color: var(--pink); font-size: 1rem; flex-shrink: 0; }
-
-  /* Success screen */
-  #success-screen {
-    display: none; text-align: center;
-  }
-  .success-icon {
-    font-size: 4rem; margin-bottom: 16px;
-    animation: bounce .6s ease;
-  }
+  #success-screen { display: none; text-align: center; }
+  .success-icon { font-size: 4rem; margin-bottom: 16px; animation: bounce .6s ease; }
   @keyframes bounce { 0%{transform:scale(0)} 70%{transform:scale(1.2)} 100%{transform:scale(1)} }
-  .success-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem; letter-spacing: 2px; color: var(--navy);
-    margin-bottom: 12px;
-  }
+  .success-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 2px; color: var(--navy); margin-bottom: 12px; }
   .success-sub { font-size: 0.95rem; font-weight: 700; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
-  .success-email-box {
-    background: var(--pink-pale); border: 2px solid var(--pink);
-    border-radius: var(--radius); padding: 16px 20px;
-    font-size: 0.9rem; font-weight: 800; color: var(--navy);
-    margin-bottom: 8px; line-height: 1.6;
-  }
+  .success-email-box { background: var(--pink-pale); border: 2px solid var(--pink); border-radius: var(--radius); padding: 16px 20px; font-size: 0.9rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; line-height: 1.6; }
   .success-email-box span { color: var(--pink); }
   .success-note { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
-
-  /* Already have account */
-  .login-link {
-    text-align: center; margin-top: 20px;
-    font-size: 0.85rem; font-weight: 700; color: var(--muted);
-  }
+  .login-link { text-align: center; margin-top: 20px; font-size: 0.85rem; font-weight: 700; color: var(--muted); }
   .login-link a { color: var(--pink); text-decoration: none; }
   .login-link a:hover { text-decoration: underline; }
 </style>
@@ -196,93 +69,86 @@
 <body>
 
 <div class="logo">Cheer<span>Pal</span></div>
-<div class="tagline">Real-Time Gym Communication</div>
+<div class="tagline">Comunicación en Tiempo Real para Gimnasios</div>
 
 <div class="card">
-
-  <!-- SIGNUP FORM -->
   <div id="form-screen">
     <div class="trial-badge">
       <div class="icon">🎀</div>
-      <div class="text">Start your <span>7-day free trial</span> — no credit card required.<br/>Full access from day one.</div>
+      <div class="text">Comienza tu <span>prueba gratuita de 7 días</span> — sin tarjeta de crédito.<br/>Acceso completo desde el primer día.</div>
     </div>
 
-    <div class="card-title">Create Your Gym Account</div>
+    <div class="card-title">Crea Tu Cuenta de Gimnasio</div>
 
     <div class="field">
-      <label class="field-label" for="gym-name">Gym Name <span>*</span></label>
-      <input type="text" id="gym-name" placeholder="e.g. Champions Cheer Academy" autocomplete="off"/>
-      <div class="slug-preview" id="slug-preview">Your URL: cheerpal.com/gym/<span id="slug-display">—</span></div>
-      <div class="field-error" id="name-error">Please enter your gym name</div>
-    </div>
-
-    <div class="field">
-      <label class="field-label" for="owner-name">Your Name <span>*</span></label>
-      <input type="text" id="owner-name" placeholder="e.g. Sarah Mitchell"/>
-      <div class="field-error" id="owner-error">Please enter your name</div>
+      <label class="field-label" for="gym-name">Nombre del Gimnasio <span>*</span></label>
+      <input type="text" id="gym-name" placeholder="ej. Academia de Cheer Campeones" autocomplete="off"/>
+      <div class="slug-preview" id="slug-preview">Tu URL: mx.cheerpal.fun/gym/<span id="slug-display">—</span></div>
+      <div class="field-error" id="name-error">Por favor ingresa el nombre de tu gimnasio</div>
     </div>
 
     <div class="field">
-      <label class="field-label" for="owner-email">Email Address <span>*</span></label>
-      <input type="email" id="owner-email" placeholder="you@yourgym.com"/>
-      <div class="field-hint">We'll send your login link here. No password needed.</div>
-      <div class="field-error" id="email-error">Please enter a valid email</div>
+      <label class="field-label" for="owner-name">Tu Nombre <span>*</span></label>
+      <input type="text" id="owner-name" placeholder="ej. María González"/>
+      <div class="field-error" id="owner-error">Por favor ingresa tu nombre</div>
     </div>
 
     <div class="field">
-      <label class="field-label">Your Teams</label>
+      <label class="field-label" for="owner-email">Correo Electrónico <span>*</span></label>
+      <input type="email" id="owner-email" placeholder="tu@tugym.com"/>
+      <div class="field-hint">Te enviaremos tu enlace de acceso aquí. Sin contraseña.</div>
+      <div class="field-error" id="email-error">Por favor ingresa un correo válido</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Tus Equipos</label>
       <div class="teams-row" id="teams-row">
-        <div class="team-tag" data-team="Elite">🏆 Elite <span class="remove" onclick="removeTeam(this, 'Elite')">✕</span></div>
+        <div class="team-tag" data-team="Élite">🏆 Élite <span class="remove" onclick="removeTeam(this, 'Élite')">✕</span></div>
         <div class="team-tag" data-team="Senior">⭐ Senior <span class="remove" onclick="removeTeam(this, 'Senior')">✕</span></div>
         <div class="team-tag" data-team="Junior">🌟 Junior <span class="remove" onclick="removeTeam(this, 'Junior')">✕</span></div>
       </div>
       <div class="team-input-row">
-        <input type="text" id="new-team" placeholder="Add a team name…" maxlength="30"/>
-        <button class="add-team-btn" onclick="addTeam()">+ Add</button>
+        <input type="text" id="new-team" placeholder="Agregar nombre de equipo…" maxlength="30"/>
+        <button class="add-team-btn" onclick="addTeam()">+ Agregar</button>
       </div>
-      <div class="field-hint">Add, remove, or rename teams to match your gym. You can change these anytime.</div>
+      <div class="field-hint">Agrega, elimina o renombra equipos. Puedes cambiarlos en cualquier momento.</div>
     </div>
 
     <div class="divider"></div>
 
     <ul class="checklist">
-      <li><span class="check">✓</span>7-day free trial — full access, no credit card</li>
-      <li><span class="check">✓</span>Director broadcast controller included</li>
-      <li><span class="check">✓</span>Unlimited family invites during trial</li>
-      <li><span class="check">✓</span>Cancel anytime before trial ends</li>
+      <li><span class="check">✓</span>7 días de prueba gratuita — acceso completo, sin tarjeta</li>
+      <li><span class="check">✓</span>Controlador de transmisión para directores incluido</li>
+      <li><span class="check">✓</span>Invitaciones ilimitadas para familias durante la prueba</li>
+      <li><span class="check">✓</span>Cancela en cualquier momento antes de que termine la prueba</li>
     </ul>
 
-    <button id="submit-btn" onclick="createGym()">🚀 Start Free Trial</button>
+    <button id="submit-btn" onclick="createGym()">🚀 Comenzar Prueba Gratuita</button>
     <div id="form-status"></div>
   </div>
 
-  <!-- SUCCESS SCREEN -->
   <div id="success-screen">
     <div class="success-icon">🎉</div>
-    <div class="success-title">Your Gym is Ready!</div>
-    <div class="success-sub">We sent a magic login link to your email. Click it to open your gym admin dashboard and start inviting families.</div>
+    <div class="success-title">¡Tu Gimnasio Está Listo!</div>
+    <div class="success-sub">Enviamos un enlace de acceso a tu correo. Haz clic en él para abrir tu panel de administración e invitar a las familias.</div>
     <div class="success-email-box" id="success-email-box">
-      A login link was sent to<br/><span id="confirm-email">—</span>
+      Se envió un enlace de acceso a<br/><span id="confirm-email">—</span>
     </div>
-    <div class="success-note">Didn't get it? Check your spam folder or <a href="#" onclick="resendLink()" style="color:var(--pink);">click to resend</a>.</div>
+    <div class="success-note">¿No lo recibiste? Revisa tu carpeta de spam o <a href="#" onclick="resendLink()" style="color:var(--pink);">haz clic para reenviar</a>.</div>
   </div>
-
 </div>
 
 <div class="login-link">
-  Already have an account? <a href="/cheerpal/login.html">Sign in here</a>
+  ¿Ya tienes cuenta? <a href="/login.html">Inicia sesión aquí</a>
 </div>
 
 <script>
-  // ── CONFIG ──
   const SUPABASE_URL = 'https://pexmoqldjbtpjxjtfsxs.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBleG1vcWxkamJ0cGp4anRmc3hzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTg3MDksImV4cCI6MjA4NzM3NDcwOX0.wZNaFCVuApL2ftozAxI52UBmmH6heeVV7co-0OptonA';
 
-  // ── TEAMS STATE ──
-  let teams = ['Elite', 'Senior', 'Junior'];
+  let teams = ['Élite', 'Senior', 'Junior'];
   const teamEmojis = ['🏆','⭐','🌟','🔥','💫','🎀','👑','⚡'];
 
-  // ── GYM NAME → SLUG ──
   document.getElementById('gym-name').addEventListener('input', function() {
     const slug = toSlug(this.value);
     document.getElementById('slug-display').textContent = slug || '—';
@@ -290,13 +156,11 @@
 
   function toSlug(str) {
     return str.toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')
       .trim().substring(0, 40);
   }
 
-  // ── TEAM MANAGEMENT ──
   function addTeam() {
     const input = document.getElementById('new-team');
     const name = input.value.trim();
@@ -305,59 +169,30 @@
     const emoji = teamEmojis[teams.length % teamEmojis.length];
     const row = document.getElementById('teams-row');
     const tag = document.createElement('div');
-    tag.className = 'team-tag';
-    tag.dataset.team = name;
+    tag.className = 'team-tag'; tag.dataset.team = name;
     tag.innerHTML = `${emoji} ${name} <span class="remove" onclick="removeTeam(this, '${name}')">✕</span>`;
-    row.appendChild(tag);
-    input.value = '';
+    row.appendChild(tag); input.value = '';
   }
 
-  function removeTeam(el, name) {
-    teams = teams.filter(t => t !== name);
-    el.parentElement.remove();
-  }
+  function removeTeam(el, name) { teams = teams.filter(t => t !== name); el.parentElement.remove(); }
 
-  document.getElementById('new-team').addEventListener('keydown', e => {
-    if (e.key === 'Enter') addTeam();
-  });
+  document.getElementById('new-team').addEventListener('keydown', e => { if (e.key === 'Enter') addTeam(); });
 
-  // ── VALIDATION ──
   function validate() {
     let valid = true;
     const gymName = document.getElementById('gym-name').value.trim();
     const ownerName = document.getElementById('owner-name').value.trim();
     const email = document.getElementById('owner-email').value.trim();
-
-    // Reset
-    ['name-error','owner-error','email-error'].forEach(id => {
-      document.getElementById(id).style.display = 'none';
-    });
-    ['gym-name','owner-name','owner-email'].forEach(id => {
-      document.getElementById(id).classList.remove('error');
-    });
-
-    if (!gymName) {
-      document.getElementById('name-error').style.display = 'block';
-      document.getElementById('gym-name').classList.add('error');
-      valid = false;
-    }
-    if (!ownerName) {
-      document.getElementById('owner-error').style.display = 'block';
-      document.getElementById('owner-name').classList.add('error');
-      valid = false;
-    }
-    if (!email || !email.includes('@')) {
-      document.getElementById('email-error').style.display = 'block';
-      document.getElementById('owner-email').classList.add('error');
-      valid = false;
-    }
+    ['name-error','owner-error','email-error'].forEach(id => { document.getElementById(id).style.display = 'none'; });
+    ['gym-name','owner-name','owner-email'].forEach(id => { document.getElementById(id).classList.remove('error'); });
+    if (!gymName) { document.getElementById('name-error').style.display='block'; document.getElementById('gym-name').classList.add('error'); valid=false; }
+    if (!ownerName) { document.getElementById('owner-error').style.display='block'; document.getElementById('owner-name').classList.add('error'); valid=false; }
+    if (!email || !email.includes('@')) { document.getElementById('email-error').style.display='block'; document.getElementById('owner-email').classList.add('error'); valid=false; }
     return valid;
   }
 
-  // ── CREATE GYM ──
   async function createGym() {
     if (!validate()) return;
-
     const gymName  = document.getElementById('gym-name').value.trim();
     const ownerName = document.getElementById('owner-name').value.trim();
     const email    = document.getElementById('owner-email').value.trim();
@@ -365,115 +200,65 @@
     const btn      = document.getElementById('submit-btn');
     const status   = document.getElementById('form-status');
 
-    btn.disabled = true;
-    btn.textContent = 'Creating your gym…';
-    status.style.color = 'var(--muted)';
-    status.textContent = '';
+    btn.disabled = true; btn.textContent = 'Creando tu gimnasio…';
+    status.style.color = 'var(--muted)'; status.textContent = '';
 
     try {
-      // 1. Check slug availability
-      const checkRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/gyms?slug=eq.${slug}&select=id`,
-        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
-      );
+      const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/gyms?slug=eq.${slug}&select=id`,
+        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
       const existing = await checkRes.json();
       if (existing.length > 0) {
         status.style.color = '#ff4444';
-        status.textContent = '⚠️ That gym name is taken. Try adding your city or state.';
-        btn.disabled = false;
-        btn.textContent = '🚀 Start Free Trial';
-        return;
+        status.textContent = '⚠️ Ese nombre de gimnasio ya está en uso. Intenta agregar tu ciudad o estado.';
+        btn.disabled = false; btn.textContent = '🚀 Comenzar Prueba Gratuita'; return;
       }
 
-      // 2. Create gym record
-      const trialEnd = new Date();
-      trialEnd.setDate(trialEnd.getDate() + 7);
-
+      const trialEnd = new Date(); trialEnd.setDate(trialEnd.getDate() + 7);
       const gymRes = await fetch(`${SUPABASE_URL}/rest/v1/gyms`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify({
-          name: gymName,
-          slug: slug,
-          owner_email: email,
-          plan: 'trial',
-          trial_ends_at: trialEnd.toISOString(),
-          active: true
-        })
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Prefer': 'return=representation' },
+        body: JSON.stringify({ name: gymName, slug, owner_email: email, plan: 'trial', trial_ends_at: trialEnd.toISOString(), active: true })
       });
-
       if (!gymRes.ok) throw new Error('Gym creation failed');
       const gymData = await gymRes.json();
       const gymId = gymData[0].gym_id;
 
-      // 3. Seed teams
       const teamEmojisMap = ['🏆','⭐','🌟','🔥','💫','🎀','👑','⚡'];
       for (let i = 0; i < teams.length; i++) {
         await fetch(`${SUPABASE_URL}/rest/v1/gym_teams`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Prefer': 'return=minimal'
-          },
-          body: JSON.stringify({
-            gym_id: gymId,
-            name: teams[i],
-            emoji: teamEmojisMap[i % teamEmojisMap.length],
-            order_num: i
-          })
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ gym_id: gymId, name: teams[i], emoji: teamEmojisMap[i % teamEmojisMap.length], order_num: i })
         });
       }
 
-      // 4. Send magic link via Supabase Auth
       const authRes = await fetch(`${SUPABASE_URL}/auth/v1/magiclink`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY
-        },
-        body: JSON.stringify({
-          email: email,
-          options: {
-           emailRedirectTo: `https://cheerpal.fun/admin.html?gym=${slug}`,
-            data: { gym_id: gymId, gym_slug: slug, role: 'owner', name: ownerName }
-          }
-        })
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
+        body: JSON.stringify({ email, options: { emailRedirectTo: `https://mx.cheerpal.fun/admin.html?gym=${slug}`, data: { gym_id: gymId, gym_slug: slug, role: 'owner', name: ownerName } } })
       });
-
       if (!authRes.ok) throw new Error('Magic link failed');
 
-      // 5. Show success
       document.getElementById('form-screen').style.display = 'none';
       document.getElementById('success-screen').style.display = 'block';
       document.getElementById('confirm-email').textContent = email;
 
     } catch(err) {
       status.style.color = '#ff4444';
-      status.textContent = '❌ Something went wrong. Please try again.';
+      status.textContent = '❌ Algo salió mal. Por favor intenta de nuevo.';
       console.error(err);
     }
-
-    btn.disabled = false;
-    btn.textContent = '🚀 Start Free Trial';
+    btn.disabled = false; btn.textContent = '🚀 Comenzar Prueba Gratuita';
   }
 
-  // ── RESEND LINK ──
   async function resendLink() {
     const email = document.getElementById('owner-email').value.trim();
     if (!email) return;
     await fetch(`${SUPABASE_URL}/auth/v1/magiclink`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
       body: JSON.stringify({ email })
     });
-    alert('Link resent! Check your inbox.');
+    alert('¡Enlace reenviado! Revisa tu bandeja de entrada.');
   }
 </script>
 </body>
