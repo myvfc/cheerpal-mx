@@ -430,21 +430,17 @@
   .cta-band .btn-white:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,0.2); }
 
   /* ── FOOTER ── */
-  footer {
-    background: var(--navy);
-    padding: 40px 5%;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 20px;
-  }
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem; letter-spacing: 3px; color: var(--pink);
-  }
-  .footer-logo span { color: #fff; }
-  .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
-  .footer-links a { color: #64748b; text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: color .2s; }
-  .footer-links a:hover { color: var(--pink); }
-  .footer-copy { color: #334155; font-size: 0.8rem; font-weight: 700; }
+ <footer>
+  <div class="footer-logo">mx.<span>CheerPal</span></div>
+  <div class="footer-links">
+    <a href="#how">How It Works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#features">Features</a>
+    <a href="mailto:support@cheerpal.fun">Contact</a>
+    <a href="https://peak-platforms.com" target="_blank" style="color:#E91E8C;">A Peak Platforms Product</a>
+  </div>
+  <div class="footer-copy">© 2026 mx.CheerPal · Peak Financial Group LLC · <a href="https://peak-platforms.com" target="_blank" style="color:#334155;text-decoration:none;">A Peak Platforms Product</a></div>
+</footer>
 
   /* ── RESPONSIVE ── */
   @media (max-width: 640px) {
